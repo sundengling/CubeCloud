@@ -1,0 +1,265 @@
+/* CSS Document */
+
+body {
+	width: 100%;
+	height: 100%;
+	font-family: "微软雅黑", "黑体", Arial, Helvetica, sans-serif;
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
+.brand {
+	margin-left: 15px !important;
+}
+.navbar .container {
+	width: 100%;
+}
+
+.btn-os {
+	padding-top: 6px;
+	padding-bottom: 6px;
+}
+.icon-android {
+	width: 16px;
+	height: 16px;
+	background: url(../../assets/images/icon_android_inverse.png) no-repeat center;
+	background-size: 16px 16px;
+	padding: 0;
+	margin: 0;
+}
+.icon-android:hover {
+	background: url(../../assets/images/icon_android_inverse_on.png) no-repeat center;
+}
+.icon-ios {
+	width: 16px;
+	height: 16px;
+	background: url(../../assets/images/icon_ios_inverse.png) no-repeat center;
+	background-size: 16px 16px;
+	padding: 0;
+	margin: 0;
+}
+.icon-ios:hover {
+	background: url(../../assets/images/icon_ios_inverse_on.png) no-repeat center;
+}
+
+.icon-user-face {
+	width: 22px;
+	height: 22px;
+	background-repeat: no-repeat;
+	background-size: 22px 22px;
+	margin: 0px 8px -7px 0px;
+}
+
+.nav-role .icon {
+	width: 22px;
+	height: 22px;
+	margin-top: 16px;
+}
+.nav-role .icon-presenter {
+	background-image: url(../../assets/images/icon_presenter_normal@2x.png) !important;
+	background-size: 22px 22px !important;
+	margin-right: 8px;
+}
+.nav-role .icon-member {
+	background-image: url(../../assets/images/icon_member@2x.png) !important;
+	background-size: 22px 22px !important;
+	margin-right: 8px;
+}
+
+.app-navbar {
+	margin-bottom: 5px !important;
+}
+.app-panel {
+	margin-bottom: 5px !important;
+}
+.app-panel .panel-heading {
+	padding: 0px 15px;
+}
+.app-panel .panel-heading .panel-title {
+	margin-top: 8px;
+}
+.app-panel .navbar {
+	min-height: 40px;
+	margin-bottom: 0px !important;
+}
+.app-panel .navbar-collapse {
+	padding: 0px;
+	margin: 0px;
+}
+.app-panel .navbar-form {
+	padding-top: 2px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.app-footer {
+	width: 100%;
+	height: 30px;
+	vertical-align: middle;
+	padding-left: 10px;
+	padding-right: 10px;
+	line-height: 28px;
+	font-size: 12px;
+	z-index: 9;
+}
+.app-footer div {
+	margin: 0px;
+	padding: 0px;
+}
+
+.main {
+	width: 100%;
+}
+
+.sidebar-container {
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+.center-container {
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+.panel-body {
+	padding: 5px;
+}
+
+.default-wb-nav {
+	display: none !important;
+}
+
+.speech-wb-nav {
+	display: block !important;
+}
+
+.layout-icon {
+	border: none;
+	border-radius: 0px;
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+	opacity: 1;
+	-moz-opacity: 1;
+	-webkit-opacity: 1;
+	background-color: #fff;
+}
+
+.rtc-container {
+	width: 100%;
+	height: 100%;
+}
+.conference-layout-placeholder {
+	display: none;
+	width: 100%;
+	height: 100%;
+}
+.conference-layout-control {
+	display: none;
+	position: absolute;
+	float: left;
+	min-width: 100px;
+	text-align: center;
+	z-index: 9999;
+}
+.conference-layout-control .btn-collapse-up {
+	background: url(../../assets/images/icon_collapse_up.png) no-repeat;
+	background-color: rgba(0, 0, 0, 0.3);
+	background-position: center center;
+	background-size: 64px 24px;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+	-moz-border-radius-bottomleft: 0;
+	-moz-border-radius-bottomright: 0;
+	-webkit-border-bottom-left-radius: 0;
+	-webkit-border-bottom-right-radius: 0;
+}
+.conference-layout-control .btn-collapse-down {
+	background: url(../../assets/images/icon_collapse_down.png) no-repeat;
+	background-color: rgba(0, 0, 0, 0.3);
+	background-position: center center;
+	background-size: 64px 24px;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+	-moz-border-radius-bottomleft: 0;
+	-moz-border-radius-bottomright: 0;
+	-webkit-border-bottom-left-radius: 0;
+	-webkit-border-bottom-right-radius: 0;
+}
+.conference-layout-control #btn_defaultlayout
+, .conference-layout-control #btn_fullscreen {
+	background-color: rgba(0, 0, 0, 0.3);
+	border-radius: 0;
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	padding: 2px 0px 2px 0px;
+}
+.conference-layout-control #btn_defaultlayout .icon
+, .conference-layout-control #btn_fullscreen .icon {
+	width: 24px;
+	height: 24px;
+	background-size: 24px 24px;
+}
+.conference-layout-control #btn_defaultlayout .icon {
+	background: url(../../assets/images/icon_default_layout@2x.png) no-repeat;
+	background-size: 24px 24px;
+	background-position: center;
+}
+.conference-layout-control #btn_defaultlayout:hover .icon {
+	background: url(../../assets/images/icon_default_layout_on@2x.png) no-repeat;
+	background-size: 24px 24px;
+	background-position: center;
+}
+.conference-layout-control #btn_fullscreen .icon-restorescreen {
+	background: url(../../assets/images/icon_restorescreen@2x.png) no-repeat;
+	background-size: 24px 24px;
+	background-position: center;
+}
+.conference-layout-control #btn_fullscreen:hover .icon-restorescreen {
+	background: url(../../assets/images/icon_restorescreen_on@2x.png) no-repeat;
+	background-size: 24px 24px;
+	background-position: center;
+}
+.conference-layout-control #btn_fullscreen .icon-fullscreen {
+	background: url(../../assets/images/icon_fullscreen@2x.png) no-repeat;
+	background-size: 24px 24px;
+	background-position: center;
+}
+.conference-layout-control #btn_fullscreen:hover .icon-fullscreen {
+	background: url(../../assets/images/icon_fullscreen_on@2x.png) no-repeat;
+	background-size: 24px 24px;
+	background-position: center;
+}
+
+.conference-layout-control .container {
+	width: 100px;
+	min-width: 100px;
+	max-width: 100px;
+}
+.conference-layout-control .col-xs-6 {
+	padding: 0px;
+}
+
+#panel_members .panel-body {
+	padding: 5px 0px 5px 0px;
+}
+
+#help {
+	overflow: auto;
+}
+.manual-figure .modal-lg {
+	width: 90%;
+}
+.help-text {
+	width: 100%;
+	height: 100%;
+	padding: 8px 0px 8px 8px;
+}
+.help-text p {
+	font-size: 12px;
+	text-indent: 24px;
+}
+.help-text h5 {
+	font-weight: bold;
+}

@@ -1,0 +1,70 @@
+/* CSS Document */
+html, body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.btn {
+	width: 16px;
+	height: 16px;
+	border: none;
+	background: #fff;
+	padding: 0px !important;
+	margin: 0px !important;
+	background-color: transparent;
+}
+.btn .icon {
+	padding: 0px !important;
+	margin: 0px !important;
+}
+
+.auth-item {
+	display:none;
+	padding: 0px 4px 0px 0px;
+}
+
+/* .auth-more {
+	display:inline-block;
+} */ 
+
+.table-responsive {
+	border: none;
+	overflow-x: hidden;
+}
+
+.table thead tr th {
+	text-align: left;
+}
+
+.table tbody tr td {
+	padding-right:0;
+}
+
+button {
+	background: none;
+	border: none;
+}
+
+.col {
+	padding-left: 10px;
+	padding-right: 0px;
+}
+
+.presenter-more-div {
+	cursor: pointer;
+}
+
+.name-text {
+	width: 100px;
+	height: 16px;
+	line-height: 16px;
+	text-align: center|left;
+	display: inline-block; 
+	text-overflow: ellipsis;
+	-ms-text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}

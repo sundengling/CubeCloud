@@ -1,0 +1,116 @@
+body {
+	width: 100%;
+	height: 100%;
+	font-family: "微软雅黑", "黑体", Arial, Helvetica, sans-serif;
+	
+}
+
+.content {
+	width: 1440px;
+	height: 938px;
+	background: url(../../assets/health/bg.png) no-repeat;
+	background-size: 1440px 938px;
+	margin: 0px auto;
+	padding: 0px;
+	position: relative;
+}
+
+.main-nav {
+	width: 1440px;
+	height: 86px;
+	margin: 0px auto;
+	font-family: "幼圆", "微软雅黑", "黑体";
+	background: #000000;
+	border: none;
+}
+.main-nav .nav {
+	height: 86px;
+}
+.main-nav .navbar-brand {
+	padding-top: 5px !important;
+}
+.brand {
+	width: 258px;
+	height: 76px;
+	background: url(../../assets/health/logo.png) no-repeat;
+	background-size: 258px 76px;
+}
+.main-nav .navbar-nav {
+	
+}
+.main-nav .navbar-nav > li {
+	height: 86px;
+	width: 78px;
+	color: #66c4ff;
+}
+.main-nav .navbar-nav > li > a {
+	color: #66c4ff;
+	background-color: #fff;
+	text-align: center;
+	padding-top: 33px;
+	padding-bottom: 33px;
+}
+.main-nav .navbar-nav > li > a:hover {
+	color: #202020;
+	background-color: #f1f1f1;
+}
+.main-nav .navbar-nav > .active {
+	color: #fff;
+}
+.main-nav .navbar-nav > .active > a {
+	color: #fff;
+	background-color: #66c4ff;
+	padding-top: 33px;
+	padding-bottom: 33px;
+}
+.main-nav .navbar-nav > .active > a:hover {
+	color: #efefef;
+	background-color: #66c4ff;
+}
+
+.main {
+	width: 1440px;
+	height: 106px;
+	margin: 0px auto;
+	position: absolute;
+	bottom: 146px;
+}
+/* .main button {
+	border: none;
+	background: none;
+} */
+.main .patient-btn {
+	width: 324px;
+	height: 106px;
+	background: url(../../assets/health/patient.png) no-repeat;
+	background-size: 324px 106px;
+}
+.main .doctor-btn {
+	width: 324px;
+	height: 106px;
+	background: url(../../assets/health/doctor.png) no-repeat;
+	background-size: 324px 106px;
+}
+
+.footer {
+	width: 1440px;
+	height: 86px;
+	margin: 0px auto;
+	position:absolute;
+	bottom: 0px;
+	text-align: center;
+	background: #000000;
+	border: none;
+}
+.footer span {
+	position:relative;
+	top: 33px;
+	margin-right: 20px;
+}
+.footer span a {
+	color: #fff;
+}
+.footer span a:hover {
+	color: #66c4ff;
+	text-decoration: none;
+}

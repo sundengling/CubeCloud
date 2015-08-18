@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+<title>Cube RTC</title>
+<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+<link href="app/styles/common.css" rel="stylesheet">
+<link href="libs/rtc-app.css" rel="stylesheet">
+</head>
+
+<body>
+<!-- 视频容器 -->
+<div id="rvc" class="video-container text-center">
+	<video id="remote_video" width="100%" height="100%"></video>
+</div>
+<div id="lvc" class="video-container text-center">
+	<video id="local_video" width="100%" height="100%" muted></video>
+</div>
+<audio id="remote_audio"></audio>
+
+<!-- Default 模式操作面板 -->
+<div id="operation" class="btn-group btn-group-sm action" role="group" aria-label="graphics-toolbar">
+	<button id="default_btn_videocall" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="视频通话">
+		<span class="glyphicon glyphicon-facetime-video"></span>
+	</button>
+	<button id="default_btn_voicecall" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="语音通话">
+		<span class="glyphicon glyphicon-earphone"></span>
+	</button>
+	<button id="default_btn_terminate" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="结束通话">
+		<span class="glyphicon glyphicon-phone-alt"></span>
+	</button>
+	<button id="default_btn_mute" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="静音">
+		<span class="glyphicon glyphicon-volume-off"></span>
+	</button>
+</div>
+
+<!-- Conference 模式操作面板 -->
+<div class="conference-media-control">
+	<div id="conference_operation" class="container text-center">
+		<div class="btn-group" role="group" aria-label="...">
+			<button id="conference_btn_call" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="视频通话">
+				<span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span>		
+			</button>
+			<button id="conference_btn_terminate" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="结束通话">
+				<span class="glyphicon glyphicon-phone-alt" aria-hidden="true"></span>		
+			</button>
+			<button id="conference_btn_camera" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="摄像头开关">
+				<span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+			</button>
+			<button id="conference_btn_microphone" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="麦克风开关">
+				<span class="glyphicon glyphicon glyphicon-ice-lolly" aria-hidden="true"></span>
+			</button>
+			<button id="conference_btn_mute" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="静音">
+				<span class="glyphicon glyphicon-volume-off" aria-hidden="true"></span>		
+			</button>
+			<button id="conference_btn_volume_down" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="音量-">
+				<span class="glyphicon glyphicon-volume-down" aria-hidden="true"></span>		
+			</button>
+			<button id="conference_btn_volume_up" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="音量+">
+				<span class="glyphicon glyphicon-volume-up" aria-hidden="true"></span>		
+			</button>
+			<button id="conference_btn_whiteboard" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="白板">
+				<span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span>
+			</button>
+			<button id="conference_btn_messager" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="即时消息">
+				<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+			</button>
+			<button id="conference_btn_lock" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="锁定通话">
+				<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>		
+			</button>
+			<button id="conference_btn_invite" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="邀请">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>		
+			</button>
+			<button id="conference_btn_pushpin" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="图钉">
+				<span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span>		
+			</button>
+			<!-- button id="conference_btn_close" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="关闭">
+				<span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span>
+			</button -->
+		</div>
+	</div>
+	<button id="btn_conference_controller" class="btn btn-block btn-collapse-down">&nbsp;</button>
+</div>
+
+<!-- 自己信息面板 -->
+<div class="self-face">
+	<div class="panel panel-default">
+		<div class="panel-body">
+		</div>
+	</div>
+</div>
+<!-- 用户列表 -->
+<div class="container user-container">
+	<div class="row">
+		<div class="col-sm-1 btn-prev-panel">
+			<span class="glyphicon glyphicon-menu-left"></span>
+		</div>
+		<div class="col-sm-10 items">
+			<div id="panel_can" class="row">
+				<!-- div class="col-sm-1 item-col">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="btn-group">
+								<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="视频">
+									<span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span>
+								</button>
+								<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="静音">
+									<span class="glyphicon glyphicon-volume-off" aria-hidden="true"></span>
+								</button>
+							</div>
+							<div class="info">
+								<div class="name"></div>
+							</div>
+						</div>
+					</div>
+				</div -->
+			</div>
+		</div>
+		<div class="col-sm-1 btn-next-panel">
+			<span class="glyphicon glyphicon-menu-right"></span>
+		</div>
+	</div>
+</div>
+<div class="info-layer">
+	<div class="title">
+		<h3 id="coop_display_name"></h3>
+	</div>
+</div>
+
+<script type="text/javascript" src="assets/js/jquery-2.1.3.min.js"></script>
+<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="libs/nucleus-min.js"></script>
+<script type="text/javascript" src="libs/cube-core-min.js"></script>
+<script type="text/javascript" src="libs/cube-signaling-min.js"></script>
+<script type="text/javascript" src="libs/cube-sipworker-min.js"></script>
+<script type="text/javascript" src="libs/rtc-app.js"></script>
+</body>
+</html>

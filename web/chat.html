@@ -1,0 +1,600 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+<title>Cube Engine</title>
+<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="favicon.ico">
+<style>
+.navbar-brand {
+	background-image: url(assets/images/logo.png);
+	background-repeat: no-repeat;
+	background-size: 50px 50px;
+	padding-left: 60px;
+}
+.text-area {
+	height: 200px;
+	border: 1px #ccc solid;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	margin-bottom: 15px;
+	padding: 8px;
+	overflow: auto;
+}
+.text-system {
+	font-size: 12px;
+	color: #a94442;
+}
+.text-self {
+	color: #31708f;
+}
+.history-content {
+	min-height: 400px;
+	max-height: 500px;
+}
+.footer {
+	margin-top: 20px;
+	text-align: center;
+}
+</style>
+</head>
+
+<body>
+<nav class="navbar navbar-default">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="http://www.getcube.cn" target="_blank">魔方协作云 <span id="version_info" style="font-size:11px;"></span></a>
+		</div>
+	</div>
+</nav>
+
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">用户登录</div>
+				<div class="panel-body">
+					<div id="reg_info" class="alert alert-info text-center" role="alert">请您先登录</div>
+					<form class="form-inline">
+						<div class="form-group">
+							<input id="input_mynumber" class="form-control" placeholder="用户名" type="text">
+						</div>
+						<button id="btn_register" type="button" class="btn btn-success">登录</button>
+						<button id="btn_unregister" type="button" class="btn btn-danger" disabled>注销</button>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-12 col-md-8">
+			<div class="panel panel-default">
+				<div class="panel-heading">一对一</div>
+				<div class="panel-body">
+					<div id="call_info" class="alert alert-info text-center" role="alert">登录后输入被叫用户名即可发起通话</div>
+					<form class="form-inline">
+						<div class="form-group">
+							<input id="input_peernumber" class="form-control" placeholder="被叫用户名" type="text">
+						</div>
+						<select class="form-control" id="input_videosize">
+							<option value="SQCIF">SQCIF (128×96)</option>
+							<option value="QQVGA">QQVGA (160×120)</option>
+							<option value="QVGA">QVGA (320×240)</option>
+							<option value="CIF">CIF (352×288)</option>
+							<option value="VGA" selected="selected">VGA (640×480)</option>
+							<option value="SVGA">SVGA (800×600)</option>
+							<option value="HD">HD (960×720)</option>
+							<option value="XGA">XGA (1024×768)</option>
+							<option value="SXGA">SXGA (1280×1024)</option>
+							<option value="UXGA">UXGA (1600×1200)</option>
+							<option value="WQVGA">WQVGA (400×240)</option>
+							<option value="WCIF">WCIF (512×288)</option>
+							<option value="WVGA">WVGA (800×480)</option>
+							<option value="WSVGA">WSVGA (1024×600)</option>
+							<option value="WHD">WHD (1280×720)</option>
+							<option value="WXGA">WXGA (1280×768)</option>
+							<option value="WUXGA">WUXGA (1920×1200)</option>
+							<option value="W432P">W432P (768×432)</option>
+							<option value="W480P">W480P (768×480)</option>
+						</select>
+						<button id="btn_call" type="button" class="btn btn-primary" disabled>呼叫</button>
+						<button id="btn_answer" type="button" class="btn btn-primary" disabled>接听</button>
+						<button id="btn_terminate" type="button" class="btn btn-primary" disabled>挂断</button>
+						<button id="btn_query" type="button" class="btn btn-warning">查询用户</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">文本信息</div>
+				<div class="panel-body">
+					<div id="text_area" class="text-area">
+					</div>
+					<form class="form-horizontal">
+						<div class="form-group">
+							<div class="col-md-10 col-sm-9">
+								<input id="input_text" class="form-control" placeholder="" type="text">
+							</div>
+							<div class="col-md-2 col-sm-3">
+								<button id="btn_send_msg" type="button" class="btn btn-primary">发送</button>
+								<button id="btn_history" type="button" class="btn btn-default">消息历史</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">远端视频</div>
+				<div class="panel-body text-center">
+					<video id="remote_video" width="100%"></video>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">本地视频</div>
+				<div class="panel-body text-center">
+					<video id="local_video" width="100%" muted></video>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<audio id="remove_audio"></audio>
+
+<!-- 通用模态对话框 -->
+<div id="modal_alert" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="AlertModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="AlertModalLabel">提示</h4>
+			</div>
+			<div class="modal-body">
+				<div id="alert_content"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 查询历史对话框 -->
+<div id="modal_history" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="HistoryModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="HistoryModalLabel">消息历史</h4>
+			</div>
+			<div class="modal-body">
+				<div id="history_content" class="history-content"></div>
+			</div>
+			<div class="modal-footer">
+				<button id="btn_oneday_history" type="button" class="btn btn-primary">最近一天</button>
+				<button id="btn_onehour_history" type="button" class="btn btn-primary">最近一小时</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<footer class="footer">
+	<p>Copyright &copy; 2015 Cube Cloud.</p>
+</footer>
+
+<script type="text/javascript" src="libs/jquery-2.1.3.min.js"></script>
+<script type="text/javascript" src="libs/nucleus-min.js"></script>
+<script type="text/javascript" src="libs/cube-core-min.js"></script>
+<script type="text/javascript" src="libs/cube-sipworker-min.js"></script>
+<script type="text/javascript" src="libs/cube-signaling-min.js"></script>
+<script type="text/javascript" src="libs/cube-messager-min.js"></script>
+<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(e) {
+	// 控件状态初始化
+	$('#btn_register').removeAttr('disabled');
+	$('#btn_unregister').attr('disabled', 'disabled');
+	$('#btn_call').attr('disabled', 'disabled');
+	$('#btn_answer').attr('disabled', 'disabled');
+	$('#btn_terminate').attr('disabled', 'disabled');
+	$('#input_mynumber').removeAttr('disabled');
+	$('#input_peernumber').removeAttr('disabled');
+
+	// 版本信息
+	$('#version_info').text('v' + window.cube.version);
+
+	// 启动 Cube Engine
+	if (window.cube.startup()) {
+		// 加载视频通话模块
+		if (null != window.utils.getUrlParam('conference')) {
+			window.cube.loadConference("local_video", "remote_video", "remove_audio");
+		}
+		else {
+			window.cube.loadSignaling("local_video", "remote_video", "remove_audio");
+		}
+		// 加载即时消息模块
+		window.cube.loadMessager();
+
+		// 设置注册监听器
+		window.cube.setRegistrationListener(new SimpleRegistrationListener());
+		// 设置呼叫监听器
+		window.cube.setCallListener(new SimpleCallListener());
+		// 设置消息监听器
+		window.cube.setMessageListener(new SimpleMessageListener());
+	}
+	else {
+		alert('Cube Engine 启动失败！');
+	}
+
+	// 发送消息封装
+	var sendMsg = function() {
+		var receiver = $('#input_peernumber').val();
+		if (receiver.length < 4) {
+			appendText(0, '没有指定收件人');
+			return;
+		}
+
+		var content = $('#input_text').val();
+		if (content.length < 1) {
+			appendText(0, '请输入发送信息');
+			return;
+		}
+		var ret = window.cube.sendMessage(receiver, content);
+		if (!ret) {
+			appendText(0, '发送信息失败');
+			return;
+		}
+
+		$('#input_text').val('');
+	};
+
+	// 绑定登录按钮事件
+	$('#btn_register').click(function(e) {
+		var myName = $('#input_mynumber').val();
+		if (myName.length < 4) {
+			showAlert('请输入正确的用户名');
+			return;
+		}
+
+		// 进行帐号登录
+		window.cube.registerAccount(myName, '123456');
+	});
+
+	// 绑定注销按钮事件
+	$('#btn_unregister').click(function(e) {
+		// 进行帐号注销
+		window.cube.unregisterAccount();
+	});
+
+	// 视频分辨率修改事件
+	$('#input_videosize').change(function(e) {
+		// 视频大小设置
+		var vs = $('#input_videosize').find(":selected").val();
+		var videoSize = CubeVideoSize[vs];
+
+		// 配置视频大小
+		window.cube.configure({ "videoSize": videoSize });
+	});
+
+	// 绑定呼叫按钮事件
+	$('#btn_call').click(function(e) {
+		var callee = $('#input_peernumber').val();
+		if (callee.length < 4) {
+			showAlert('请输入正确的被叫用户名');
+			return;
+		}
+
+		// 视频大小设置
+		var vs = $('#input_videosize').find(":selected").val();
+		var videoSize = CubeVideoSize[vs];
+
+		// 配置视频大小
+		window.cube.configure({ "videoSize": videoSize });
+
+		// 发起呼叫
+		if (window.cube.makeCall(callee, true)) {
+			setCallInfo('呼叫 ' + callee);
+		}
+		else {
+			setCallInfo('呼叫 ' + callee + ' 失败');
+		}
+	});
+
+	// 绑定应答按钮事件
+	$('#btn_answer').click(function(e) {
+		// 发起应答
+		window.cube.answerCall(true);
+	});
+
+	// 绑定挂断按钮事件
+	$('#btn_terminate').click(function(e) {
+		// 挂断通话
+		window.cube.terminateCall();
+	});
+
+	// 查询用户状态
+	$('#btn_query').click(function(e) {
+		var name = $('#input_peernumber').val();
+		if (name.length < 4) {
+			showAlert('请输入正确的用户名');
+			return;
+		}
+
+		// 使用回调函数接收查询结果
+		window.cube.queryRemoteAccounts([name], function(list) {
+			var name = list[0].name;
+			var state = list[0].state;
+			if (state == 1) {
+				showAlert('<div class="alert alert-success" role="alert">'+ name + ' 在线</div>');
+			}
+			else {
+				showAlert('<div class="alert alert-danger" role="alert">'+ name + ' 离线</div>');
+			}
+		});
+	});
+
+	// 显示消息历史对话框
+	$('#btn_history').click(function(e) {
+		// 检查用户使用已经登录
+		var regState = window.cube.getSession().getRegState();
+		if (regState != CubeRegistrationState.Ok) {
+			showAlert('<div class="alert alert-warning" role="alert">请先登录系统！</div>');
+			return;
+		}
+
+		$('#history_content').html('');
+
+		$('#modal_history').modal('show');
+	});
+
+	// 查询最近一天的消息记录
+	$('#btn_oneday_history').click(function(e) {
+		// 计算查询起止事件
+		var end = Date.now();
+		var begin = end - 24 * 60 * 60 * 1000;
+
+		// 清空内容区
+		$('#history_content').html('');
+
+		// 查询消息历史记录
+		window.cube.queryMessageHistory(begin, end, function(messages) {
+			// 从返回的数组里获取消息
+			for (var i = 0; i < messages.length; ++i) {
+				var message = messages[i];
+				if (message.type == 'text') {
+					window.appendHistory(message);
+				}
+			}
+		});
+	});
+
+	// 查询最近一小时的消息记录
+	$('#btn_onehour_history').click(function() {
+		// 计算查询起止事件
+		var end = Date.now();
+		var begin = end - 60 * 60 * 1000;
+
+		// 清空内容区
+		$('#history_content').html('');
+
+		// 查询消息历史记录
+		window.cube.queryMessageHistory(begin, end, function(messages) {
+			// 从返回的数组里获取消息
+			for (var i = 0; i < messages.length; ++i) {
+				var message = messages[i];
+				if (message.type == 'text') {
+					window.appendHistory(message);
+				}
+			}
+		});
+	});
+
+	// 绑定发送消息按钮事件
+	$('#btn_send_msg').click(function(e) {
+		sendMsg();
+	});
+
+	// 使用回车键快速发送消息
+	$('#input_text').keypress(function(e) {
+		if (e.keyCode == 13) {
+			sendMsg();
+			e.preventDefault();
+		}
+	});
+});
+
+(function(global) {
+	// 显示 Alert 信息
+	global.showAlert = function(content) {
+		$('#alert_content').html(content);
+		$('#modal_alert').modal('show');
+	}
+
+	global.setRegInfo = function(content) {
+		$('#reg_info').text(content);
+	}
+
+	global.setCallInfo = function(content) {
+		$('#call_info').text(content);
+	}
+
+	// type:
+	// 0 - 系统消息
+	// 1 - 对方消息
+	// 2 - 己方消息
+	global.appendText = function(type, content) {
+		switch (type) {
+			case 0:
+				$('#text_area').append('<p class="text-center text-system">'+ content +'</p>');
+				break;
+			case 1:
+				$('#text_area').append('<p class="text-left">'+ content +'</p>');
+				break;
+			case 2:
+				$('#text_area').append('<p class="text-right text-self">'+ content +'</p>');
+				break;
+			default:
+				break;
+		}
+
+		$('#text_area').scrollTop(20000);
+	}
+
+	// 格式化时间戳
+	global.formatTimestamp = function(time) {
+		var date = new Date(time);
+		var str = [date.getMonth() + 1, '/', date.getDate(), ' ',
+			date.getHours() < 10 ? '0' + date.getHours() : date.getHours(), ':',
+			date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes(), ':',
+			date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()];
+		return str.join('');
+	}
+
+	global.appendHistory = function(message) {
+		var c = $('#history_content');
+		var html = ['<p>', global.formatTimestamp(message.getSendTime()), ' ',
+			message.getSender(), ' -&gt; ', message.getReceiver(), ' : ', message.getContent(), '</p>'];
+		c.append(html.join(''));
+	}
+
+	/*
+	 * 实现注册监听器
+	 */
+	global.SimpleRegistrationListener = Class(CubeRegistrationListener, {
+		ctor: function() {
+			// Nothing
+		},
+
+		onRegistrationProgress: function(session) {
+			setRegInfo('正在注册……');
+		},
+
+		onRegistrationOk: function(session) {
+			$('#input_mynumber').attr('disabled', 'disabled');
+			$('#btn_register').attr('disabled', 'disabled');
+			$('#btn_unregister').removeAttr('disabled');
+
+			$('#btn_call').removeAttr('disabled');
+
+			setRegInfo('在线');
+		},
+
+		onRegistrationCleared: function(session) {
+			$('#input_mynumber').removeAttr('disabled');
+
+			$('#btn_unregister').attr('disabled', 'disabled');
+			$('#btn_register').removeAttr('disabled');
+
+			$('#btn_call').attr('disabled', 'disabled');
+			$('#btn_answer').attr('disabled', 'disabled');
+			$('#btn_terminate').attr('disabled', 'disabled');
+
+			setRegInfo('离线');
+		},
+
+		onRegistrationFailed: function(session) {
+			setRegInfo('注册失败');
+		}
+	});
+
+	/*
+	 * 实现呼叫监听器
+	 */
+	global.SimpleCallListener = Class(CubeCallListener, {
+		ctor: function() {
+			// Nothing
+		},
+
+		onNewCall: function(direction, session, video) {
+			setCallInfo(direction == CubeCallDirection.Outgoing ?
+				'呼出 ' + session.callPeer.name : '呼入 ' + session.callPeer.name);
+
+			$('#btn_call').attr('disabled', 'disabled');
+			$('#btn_terminate').removeAttr('disabled');
+
+			if (direction == CubeCallDirection.Incoming) {
+				$('#btn_answer').removeAttr('disabled');
+			}
+			else {
+				$('#btn_answer').attr('disabled', 'disabled');
+			}
+		},
+
+		onInProgress: function(session) {
+			setCallInfo('正在接通 ' + session.callPeer.name);
+		},
+
+		onCallRinging: function(session) {
+			setCallInfo(session.callPeer.name + ' 正在振铃');
+		},
+
+		onCallConnected: function(session) {
+			setCallInfo('正在与 ' + session.callPeer.name + ' 通话');
+			$('#input_peernumber').val(session.callPeer.name);
+
+			$('#btn_answer').attr('disabled', 'disabled');
+		},
+
+		onCallEnded: function(session) {
+			setCallInfo('通话结束');
+			$('#btn_call').removeAttr('disabled');
+			$('#btn_answer').attr('disabled', 'disabled');
+			$('#btn_terminate').attr('disabled', 'disabled');
+		},
+
+		onCallFailed: function(session, errorCode) {
+			setCallInfo('发生错误: ' + errorCode);
+		}
+	});
+
+	/*
+	 * 实现消息监听器
+	 */
+	global.SimpleMessageListener = Class(CubeMessageListener, {
+		ctor: function() {
+			// Nothing
+		},
+
+		onSent: function(session, message) {
+			global.appendText(2, "我：" + message.getContent());
+		},
+
+		onReceived: function(session, message) {
+			global.appendText(1, message.getSender() + "：" + message.getContent());
+
+			if ($('#input_peernumber').val().length < 4) {
+				$('#input_peernumber').val(message.getSender());
+			}
+		},
+
+		onMessageFailed: function(session, errorCode, message) {
+			global.appendText(0, "出错: " + errorCode);
+		}
+	});
+})(window);
+</script>
+</body>
+</html>

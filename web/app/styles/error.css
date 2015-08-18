@@ -1,0 +1,25 @@
+/* CSS Document */
+
+body {
+	font-family: "微软雅黑", "黑体";
+	background-size: 100% 100%;
+}
+
+.navbar-default {
+	margin-bottom: 60px;
+	border-bottom: 1px #3c9792 solid;
+}
+
+.info {
+	font-size: 16px;
+	padding-top: 8px;
+}
+
+.footer {
+	margin-top: 60px;
+}
+.footer p {
+	text-align: center;
+	margin: 0px;
+	padding: 0px;
+}

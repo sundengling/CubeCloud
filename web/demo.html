@@ -1,0 +1,1750 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+<title>Cube Engine Demo</title>
+<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+<link href="assets/css/bootstrap-slider.min.css" rel="stylesheet">
+<link href="assets/css/bootstrap-switch.min.css" rel="stylesheet">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="favicon.ico">
+<style>
+.navbar-brand {
+	background-image: url(assets/images/logo.png);
+	background-repeat: no-repeat;
+	background-size: 50px 50px;
+	padding-left: 60px;
+}
+.panel-body label {
+	font-weight: normal !important;
+}
+.text-area {
+	height: 200px;
+	border: 1px #ccc solid;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	margin-bottom: 15px;
+	padding: 8px;
+	overflow: auto;
+}
+.text-system {
+	font-size: 12px;
+	color: #a94442;
+}
+.text-self {
+	color: #31708f;
+}
+.history-content {
+	min-height: 400px;
+	max-height: 500px;
+}
+.sharing-iframe {
+	height: 210px;
+}
+.wb-divider {
+	padding: 0px;
+	margin: 0px;
+	height: 4px;
+}
+.wb-divider-thick {
+	padding: 0px;
+	margin: 0px;
+	height: 10px;
+}
+#volume {
+	width: 120px;
+}
+#wb_info {
+	font-size: 11px;
+}
+.footer {
+	margin-top: 20px;
+	text-align: center;
+}
+</style>
+</head>
+
+<body>
+<nav class="navbar navbar-default">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="http://www.getcube.cn" target="_blank">魔方 <span id="version_info" style="font-size:11px;"></span></a>
+		</div>
+		<div id="navbar" class="navbar-collapse collapse">
+			<form class="navbar-form navbar-right">
+				<div class="btn-group">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+						会议控制 <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu">
+						<li><a id="btn_conf_list" href="javascript:;"><span class="glyphicon glyphicon-list-alt"></span> 会议列表</a></li>
+						<li><a id="btn_conf_controller" href="javascript:;"><span class="glyphicon glyphicon-dashboard"></span> 控制面板</a></li>
+					</ul>
+				</div>
+				<button id="btn_toggle_video" type="button" class="btn btn-default active" data-toggle="button" aria-pressed="true" autocomplete="off">视频窗口</button>
+				<button id="btn_toggle_wb" type="button" class="btn btn-default active" data-toggle="button" aria-pressed="true" autocomplete="off">白板窗口</button>
+				&nbsp;
+				<div class="checkbox">
+					<label>
+						<input id="cb_singlenode" type="checkbox"> 单隧道节点
+					</label>
+				</div>
+			</form>
+			<form class="navbar-form navbar-right">
+				<label class="form-control-static"style="font-weight:normal !important;" title="单位：bits per second">带宽：<span id="lab_bandwidth"><em>未测试</em></span></label>
+				&nbsp;
+				<div class="btn-group">
+					<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+						网速测试 <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu">
+						<li><a id="btn_fast_test" href="javascript:;"><span class="glyphicon glyphicon-plane"></span> 快速测试 <sup>小尺寸样本</sup></a></li>
+						<li><a id="btn_normal_test" href="javascript:;"><span class="glyphicon glyphicon-transfer"></span> 标准测试 <sup>大尺寸样本</sup></a></li>
+					</ul>
+				</div>
+			</form>
+			<form class="navbar-form navbar-right">
+				<label class="form-control-static" style="font-weight:normal !important;" title="单位：millisecond">行程：<span id="lab_latency"><em>未计算</em></span> <span id="lab_latency_icon" class="glyphicon glyphicon-road"></span></label>
+			</form>
+        </div><!--/.navbar-collapse -->
+	</div>
+</nav>
+
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">用户登录</div>
+				<div class="panel-body">
+					<div id="reg_info" class="alert alert-info text-center" role="alert">请先登录</div>
+					<form class="form-inline">
+						<div class="form-group">
+							<input id="input_mydisplayname" class="form-control" placeholder="用户昵称/用户显示名" type="text"> <em>( 选填 )</em>
+						</div>
+					</form>
+					<br/>
+					<form class="form-inline">
+						<div class="form-group">
+							<input id="input_myname" class="form-control" placeholder="用户名" type="text">
+						</div>
+						<button id="btn_register" type="button" class="btn btn-success">登录</button>
+						<button id="btn_unregister" type="button" class="btn btn-danger" disabled>注销</button>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-12 col-md-8">
+			<div class="panel panel-default">
+				<div class="panel-heading">操作</div>
+				<div class="panel-body">
+					<div id="call_info" class="alert alert-info text-center" role="alert">登录后输入用户名即可进行通话、消息和白板</div>
+					<form class="form-inline">
+						<label>视频分辨率：</label>
+						<select class="form-control" id="input_videosize">
+							<option value="SQCIF">SQCIF (128×96)</option>
+							<option value="QQVGA">QQVGA (160×120)</option>
+							<option value="QVGA" selected="selected">QVGA (320×240)</option>
+							<option value="CIF">CIF (352×288)</option>
+							<option value="VGA">VGA (640×480)</option>
+							<option value="SVGA">SVGA (800×600)</option>
+							<option value="HD">HD (960×720)</option>
+							<option value="XGA">XGA (1024×768)</option>
+							<option value="SXGA">SXGA (1280×1024)</option>
+							<option value="UXGA">UXGA (1600×1200)</option>
+							<option value="WQVGA">WQVGA (400×240)</option>
+							<option value="WCIF">WCIF (512×288)</option>
+							<option value="WVGA">WVGA (800×480)</option>
+							<option value="WSVGA">WSVGA (1024×600)</option>
+							<option value="WHD">WHD (1280×720)</option>
+							<option value="WXGA">WXGA (1280×768)</option>
+							<option value="WUXGA">WUXGA (1920×1200)</option>
+							<option value="W432P">W432P (768×432)</option>
+							<option value="W480P">W480P (768×480)</option>
+						</select>
+						<label>@</label>
+						<input id="input_framerate" type="number" class="form-control" maxlength="2" value="15" style="width:70px;" />
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<label>音量：</label>&nbsp;
+						<input id="input_volume" data-slider-id="volume" type="text" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="100" />
+					</form>
+					<br/>
+					<form class="form-inline">
+						<div class="form-group">
+							<div class="input-group">
+								<input id="input_peername" class="form-control" placeholder="对方用户名" type="text">
+								<div class="input-group-addon"><a type="button" id="btn_query" href="javascript:;">查询</a></div>
+							</div>
+						</div>
+						&nbsp;
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="cb_autoanswer"> 自动接听
+							</label>
+						</div>
+						&nbsp;
+						<button id="btn_call" type="button" class="btn btn-primary" disabled>呼叫</button>
+						<button id="btn_answer" type="button" class="btn btn-primary" disabled>接听</button>
+						<button id="btn_terminate" type="button" class="btn btn-primary" disabled>挂断</button>
+						<button id="btn_localvideo" type="button" class="btn btn-primary" style="display:none;">关闭视频</button>
+						<button id="btn_localvoice" type="button" class="btn btn-primary" style="display:none;">关闭话筒</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container video-window">
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">对方视频 <span id="remote_video_info"></span>&nbsp;&nbsp;<span id="video_warning" style="color:#d9534f;display:none;"><span class="glyphicon glyphicon-exclamation-sign"></span>帧率过低</span></div>
+				<div class="panel-body text-center">
+					<video id="remote_video" width="100%" autoplay></video>
+				</div>
+				<div class="panel-footer">
+					<form class="form-inline">
+						<label class="form-control-static" style="font-weight:normal;"><span class="text-info"><span class="glyphicon glyphicon-record"></span> 准备就绪</span></label>
+						&nbsp;&nbsp;
+						<button id="btn_start_record_remote" type="button" class="btn btn-default" title="录制视频" disabled><span class="glyphicon glyphicon-facetime-video"></span></button>
+						<button id="btn_stop_record_remote" type="button" class="btn btn-default" title="停止录制" disabled><span class="glyphicon glyphicon-stop"></span></button>
+						<button id="btn_replay_remote" type="button" class="btn btn-primary" title="回放录像" disabled><span class="glyphicon glyphicon-play"></span></button>
+						&nbsp;&nbsp;
+						<div id="lab_record_remote_time" class="form-control">00:00</div>
+						<div id="lab_record_remote_size" class="form-control">----</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">本地视频 <span id="local_video_info"></span></div>
+				<div class="panel-body text-center">
+					<video id="local_video" width="100%" muted autoplay></video>
+				</div>
+				<div class="panel-footer">
+					<form class="form-inline">
+						<label id="lab_record_local_state" class="form-control-static" style="font-weight:normal;"><span class="text-info"><span class="glyphicon glyphicon-record"></span> 准备就绪</span></label>
+						&nbsp;&nbsp;
+						<button id="btn_start_record_local" type="button" class="btn btn-default" title="录制视频"><span class="glyphicon glyphicon-facetime-video"></span></button>
+						<button id="btn_stop_record_local" type="button" class="btn btn-default" title="停止录制" disabled><span class="glyphicon glyphicon-stop"></span></button>
+						<div class="btn-group">
+							<button id="btn_replay_local" type="button" class="btn btn-primary" title="回放录像" disabled><span class="glyphicon glyphicon-play"></span></button>
+							<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="caret"></span>
+								<span class="sr-only">Toggle Dropdown</span>
+							</button>
+							<ul class="dropdown-menu">
+								<li><a id="btn_history_archive" href="javascript:;"><span class="glyphicon glyphicon-time"></span> 查看归档记录</a></li>
+							</ul>
+						</div>
+						<button id="btn_upload_local" type="button" class="btn btn-primary" data-loading-text="正在存档..." autocomplete="off" title="归档到云端" disabled><span class="glyphicon glyphicon-cloud-upload"></span></button>
+						&nbsp;&nbsp;
+						<div id="lab_record_local_time" class="form-control">00:00</div>
+						<div id="lab_record_local_size" class="form-control">----</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<audio id="call_audio"></audio>
+
+<div class="container wb-window">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">智能白板 <span id="wb_info"></span></div>
+				<div class="panel-body text-center">
+					<div class="row">
+						<div class="col-sm-11" style="border-right:#ccc solid 1px;min-height:400px;">
+							<div id="wb_canvas" style="height:540px;"></div>
+						</div>
+						<div class="col-sm-1">
+							<button type="button" id="btn_wb_action_share" class="btn btn-primary">分享</button>
+							<div class="wb-divider"></div>
+							<button type="button" id="btn_wb_action_master" class="btn btn-primary">主控</button>
+							<div class="wb-divider"></div>
+							<button type="button" id="btn_wb_action_save" class="btn btn-primary">保存</button>
+							<div class="wb-divider-thick"></div>
+							<button type="button" id="btn_wb_action_sharing" class="btn btn-success">文件</button>
+							<div class="wb-divider"></div>
+							<button type="button" id="btn_wb_action_read" class="btn btn-success">阅读</button>
+							<div class="wb-divider"></div>
+							<button type="button" id="btn_wb_action_pencil" class="btn btn-default" data-toggle="button" aria-pressed="false" autocomplete="off">铅笔</button>
+							<div class="wb-divider"></div>
+							<button type="button" id="btn_wb_action_text" class="btn btn-default" data-toggle="button" aria-pressed="false" autocomplete="off">文本</button>
+							<div class="wb-divider"></div>
+							<button type="button" id="btn_wb_action_rect" class="btn btn-default" data-toggle="button" aria-pressed="false" autocomplete="off">方框</button>
+							<div class="wb-divider"></div>
+							<button type="button" id="btn_wb_action_ellipse" class="btn btn-default" data-toggle="button" aria-pressed="false" autocomplete="off">圆圈</button>
+							<div class="wb-divider-thick"></div>
+							<button type="button" id="btn_wb_action_undo" class="btn btn-default">撤销</button>
+							<div class="wb-divider"></div>
+							<button type="button" id="btn_wb_action_redo" class="btn btn-default">重做</button>
+							<div class="wb-divider"></div>
+							<button type="button" id="btn_wb_action_erase" class="btn btn-default">擦除</button>
+							<div class="wb-divider"></div>
+							<button type="button" id="btn_wb_action_clean" class="btn btn-default">清空</button>
+						</div>
+					</div>
+				</div>
+				<div class="panel-footer">
+					<div id="wb_state_bar">&nbsp;</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">文本信息</div>
+				<div class="panel-body">
+					<div id="text_area" class="text-area">
+					</div>
+					<form class="form-horizontal">
+						<div class="form-group">
+							<div class="col-md-10 col-sm-9">
+								<input id="input_text" class="form-control" placeholder="" type="text">
+							</div>
+							<div class="col-md-2 col-sm-3">
+								<button id="btn_send_msg" type="button" class="btn btn-primary">发送</button>
+								<button id="btn_history" type="button" class="btn btn-default">消息历史</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 通用模态对话框 -->
+<div id="modal_alert" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="AlertModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="AlertModalLabel">提示</h4>
+			</div>
+			<div class="modal-body">
+				<div id="alert_content"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 录像回放对话框 -->
+<div id="modal_replay" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="ReplayModalLabel" aria-hidden="true" style="z-index:1060 !important;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="ReplayModalLabel">录像回放</h4>
+			</div>
+			<div class="modal-body">
+				<video id="replay_video" width="100%" controls></video>
+				<audio id="replay_audio"></audio>
+			</div>
+			<div class="modal-footer">
+				<div id="replay_info" class="text-info"></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 录像回放对话框 -->
+<div id="modal_archive" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="ArchiveModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="ArchiveModalLabel">归档记录</h4>
+			</div>
+			<div class="modal-body">
+				<div id="archive_table">
+					<table class="table table-striped table-hover">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>文件名</th>
+								<th>创建时间</th>
+								<th>记录时长</th>
+								<th>文件大小</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 查询历史对话框 -->
+<div id="modal_history" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="HistoryModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="HistoryModalLabel">消息历史</h4>
+			</div>
+			<div class="modal-body">
+				<div id="history_content" class="history-content"></div>
+			</div>
+			<div class="modal-footer">
+				<button id="btn_oneday_history" type="button" class="btn btn-primary">最近一天</button>
+				<button id="btn_onehour_history" type="button" class="btn btn-primary">最近一小时</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 文件分享对话框 -->
+<div id="modal_sharing" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="SharingModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="SharingModalLabel">分享文件</h4>
+			</div>
+			<div class="modal-body">
+				<div>
+					<iframe id="cube_sharing_plugin" src="fileupload.jsp" frameborder="0" width="100%" height="100%" class="sharing-iframe"></iframe>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 会议列表对话框 -->
+<div id="modal_conferencelist" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="ConferenceListModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="ConferenceListModalLabel">会议列表</h4>
+			</div>
+			<div class="modal-body">
+				<div id="conflist_table">
+					<table class="table table-striped table-hover">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>会议时长</th>
+								<th>成员人数</th>
+								<th>Rate</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 会议面板对话框 -->
+<div id="modal_conference" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="ConferenceModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="ConferenceModalLabel">会议 - <span id="cc_name"></span></h4>
+			</div>
+			<div class="modal-body">
+				<div id="cc_member_table">
+					<h4>会议成员列表</h4>
+					<table class="table table-striped table-hover">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>显示名</th>
+								<th>用户名</th>
+								<th>选项</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td colspan="4" class="text-center">正在加载数据…</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>
+	</div>
+</div>
+
+<footer class="footer">
+	<p>Copyright &copy; 2015 Cube Team.</p>
+</footer>
+<script type="text/javascript" src="assets/js/jquery-2.1.3.min.js"></script>
+<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="assets/js/bootstrap-slider.min.js"></script>
+<script type="text/javascript" src="assets/js/bootstrap-switch.min.js"></script>
+<!-- nucleus 核心库 -->
+<script type="text/javascript" src="libs/nucleus-min.js"></script>
+<!-- Cube 内核库 -->
+<script type="text/javascript" src="libs/cube-core-min.js"></script>
+<!-- Cube 音视频通信库 -->
+<script type="text/javascript" src="libs/cube-signaling-min.js"></script>
+<!-- Cube 消息模块 -->
+<script type="text/javascript" src="libs/cube-messager-min.js"></script>
+<!-- Cube 白板模块 -->
+<script type="text/javascript" src="libs/cube-whiteboard-min.js"></script>
+<!-- Cube 会议模块 -->
+<script type="text/javascript" src="libs/cube-sipworker-min.js"></script>
+<!-- Cube 视频记录模块 -->
+<script type="text/javascript" src="libs/cube-recorder-min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(e) {
+	// 参数
+	var debug = window.utils.getUrlParam("debug");
+
+	// 界面状态初始化
+	$('#btn_register').removeAttr('disabled');
+	$('#btn_unregister').attr('disabled', 'disabled');
+	$('#btn_call').attr('disabled', 'disabled');
+	$('#btn_answer').attr('disabled', 'disabled');
+	$('#btn_terminate').attr('disabled', 'disabled');
+	$('#input_myname').removeAttr('disabled');
+	$('#input_mydisplayname').removeAttr('disabled');
+	$('#input_peername').removeAttr('disabled');
+	$('#cb_autoanswer')[0].checked = false;
+	$('#btn_wb_action_share').attr('disabled', 'disabled');
+	$('#btn_wb_action_master').attr('disabled', 'disabled');
+	$('#btn_wb_action_save').attr('disabled', 'disabled');
+	$('#cb_singlenode')[0].checked = false;
+
+	// 显示版本信息
+	$('#version_info').text('v' + window.cube.version);
+
+	if (window.utils.isIE9) {
+		// IE9 无法识别 video 标签宽度设置为百分比数值
+		document.getElementById("local_video").setAttribute("width", "480");
+		document.getElementById("remote_video").setAttribute("width", "480");
+	}
+
+	// 启动 Cube Engine
+	if (window.cube.startup(function() {
+			window.console.log("Cube Engine 已启动");
+
+			// 加载视频通话模块
+			window.cube.loadSignaling("local_video", "remote_video", "call_audio");
+			// 加载会议模块
+			window.cube.loadConference("local_video", "remote_video", "call_audio");
+			// 加载即时消息模块
+			window.cube.loadMessager();
+			// 加载白板
+			window.cube.loadWhiteboard("wb_canvas");
+
+			// 设置注册监听器
+			window.cube.setRegistrationListener(new SimpleRegistrationListener());
+			// 设置通话监听器
+			window.cube.setCallListener(new SimpleCallListener());
+			// 设置消息监听器
+			window.cube.setMessageListener(new SimpleMessageListener());
+			// 设置白板监听器
+			window.cube.setWhiteboardListener(new SimpleWhiteboardListener());
+
+			// 添加媒体探针
+			window.cube.getMediaController().addMediaProbe(new SimpleMediaProbe());
+		}, debug)) {
+
+		window.console.log("Cube Engine 正在启动…");
+	}
+	else {
+		alert('Cube Engine 启动失败！');
+	}
+
+	// 开关视频面板
+	$('#btn_toggle_video').click(function(e) {
+		var checked = !$(this).hasClass('active');
+		if (checked) {
+			$('.video-window').show();
+		}
+		else {
+			$('.video-window').hide();
+		}
+	});
+
+	// 开关白板面板
+	$('#btn_toggle_wb').click(function(e) {
+		var checked = !$(this).hasClass('active');
+		if (checked) {
+			$('.wb-window').show();
+		}
+		else {
+			$('.wb-window').hide();
+		}
+	});
+
+	// 发送消息封装
+	var sendMessage = function() {
+		// 收件人帐号
+		var receiver = $('#input_peername').val();
+		if (receiver.length < 4) {
+			appendText(0, '没有指定收件人');
+			return;
+		}
+
+		var content = $('#input_text').val();
+		if (content.length < 1) {
+			appendText(0, '请输入发送信息');
+			return;
+		}
+		var ret = window.cube.sendMessage(receiver, content);
+		if (!ret) {
+			appendText(0, '发送信息失败');
+			return;
+		}
+
+		$('#input_text').val('');
+	};
+
+	// 登录按钮事件
+	$('#btn_register').click(function(e) {
+		// 自己的账号
+		var myName = $('#input_myname').val();
+		if (myName.length < 4) {
+			showAlert('请输入正确的用户名');
+			return;
+		}
+
+		// 显示名
+		var displayName = $('#input_mydisplayname').val();
+
+		// 进行帐号登录
+		window.cube.registerAccount(myName, '123456', displayName);
+	});
+
+	// 注销按钮事件
+	$('#btn_unregister').click(function(e) {
+		// 进行帐号注销
+		window.cube.unregisterAccount();
+	});
+
+	// 视频分辨率修改事件
+	$('#input_videosize').change(function(e) {
+		// 视频大小设置
+		var vs = $('#input_videosize').find(":selected").val();
+		// 新的分辨率
+		var videoSize = CubeVideoSize[vs];
+
+		// 配置视频大小
+		window.cube.configure({ "videoSize": videoSize });
+	});
+
+	// 视频帧率修改事件
+	$('#input_framerate').change(function(e) {
+		var frameRate = $('#input_framerate').val();
+		if (frameRate.length > 0) {
+			// 重置最大帧率
+			window.cube.configure({ "frameRate": { min: 5, max: frameRate } });
+		}
+	});
+
+	// 音量大小调整事件
+	var volumeSlider = $('#input_volume').slider({
+		formatter: function(value) {
+			return "音量：" + value;
+		}
+	});
+	volumeSlider.on('change', function(e) {
+		var v = parseInt(volumeSlider.slider('getValue'));
+		window.cube.getMediaController().setVolume(v);
+	});
+
+	// 呼叫按钮事件
+	$('#btn_call').click(function(e) {
+		var callee = $('#input_peername').val();
+		if (callee.length < 4) {
+			showAlert('请输入正确的被叫用户名');
+			return;
+		}
+
+		$('.video-window').show();
+		if (!$('#btn_toggle_video').hasClass('active')) {
+			$('#btn_toggle_video').addClass('active');
+		}
+
+		// 视频大小设置
+		var vs = $('#input_videosize').find(":selected").val();
+		var videoSize = CubeVideoSize[vs];
+
+		// 视频帧率
+		var frameRate = 15;
+		var fr = $('#input_framerate').val();
+		if (fr.length > 0) {
+			frameRate = fr;
+		}
+
+		// 配置视频大小和帧率
+		window.cube.configure({ "videoSize": videoSize, "frameRate": { min: 5, max: parseInt(frameRate) } });
+
+		// 发起呼叫
+		if (window.cube.makeCall(callee, true)) {
+			setCallInfo('呼叫 ' + callee);
+		}
+		else {
+			setCallInfo('呼叫 ' + callee + ' 失败');
+		}
+	});
+
+	// 应答按钮事件
+	$('#btn_answer').click(function(e) {
+		// 发起应答
+		window.cube.answerCall(true);
+	});
+
+	// 挂断按钮事件
+	$('#btn_terminate').click(function(e) {
+		// 挂断通话
+		window.cube.terminateCall();
+	});
+
+	// 查询用户状态
+	$('#btn_query').click(function(e) {
+		var name = $('#input_peername').val();
+		if (name.length < 4) {
+			showAlert('请输入正确的用户名');
+			return;
+		}
+
+		// 使用回调函数接收查询结果
+		window.cube.queryAccounts([name], function(list) {
+			var name = list[0].name;
+			var state = list[0].state;
+			if (state == 1) {
+				var data = list[0].data;
+				showAlert('<div class="alert alert-success" role="alert">'+ data.displayName + ' 在线</div>');
+			}
+			else if (state == 2) {
+				var data = list[0].data;
+				showAlert('<div class="alert alert-warning" role="alert">'+ data.displayName + ' 正在通话</div>');
+			}
+			else {
+				showAlert('<div class="alert alert-danger" role="alert">'+ name + ' 离线</div>');
+			}
+		});
+	});
+
+	// 是否自动接听
+	$('#cb_autoanswer').change(function(e) {
+		// 设置自动接听
+		window.cube.autoAnswer(this.checked);
+	});
+
+	// 关闭/恢复本地视频
+	$('#btn_localvideo').click(function(e) {
+		// 判断是否正在通话
+		if (!window.cube.getSession().isCalling()) {
+			return;
+		}
+
+		if (window.cube.getMediaController().isVideoEnabled()) {
+			window.cube.getMediaController().closeVideo();
+			$('#btn_localvideo').text("开启视频");
+		}
+		else {
+			window.cube.getMediaController().openVideo();
+			$('#btn_localvideo').text("关闭视频");
+		}
+	});
+
+	// 关闭/恢复麦克风
+	$('#btn_localvoice').click(function(e) {
+		if (window.cube.getMediaController().isVoiceEnabled()) {
+			window.cube.getMediaController().closeVoice();
+			$('#btn_localvoice').text("开启话筒");
+		}
+		else {
+			window.cube.getMediaController().openVoice();
+			$('#btn_localvoice').text("关闭话筒");
+		}
+	});
+
+	var refreshTimer = 0;
+	// 开始录像
+	$('#btn_start_record_local').click(function(e) {
+		$(this).attr('disabled', 'disabled');
+		$('#btn_stop_record_local').removeAttr('disabled');
+		$('#btn_replay_local').attr('disabled', 'disabled');
+		$('#lab_record_local_time').text('00:00');
+		$('#lab_record_local_size').text('----');
+
+		if (refreshTimer > 0) {
+			clearTimeout(refreshTimer);
+			refreshTimer = 0;
+		}
+
+		// 判断是否正在通话，然后进行录制
+		if (cube.getSession().isCalling()) {
+			// 录制通话视频
+			if (!cube.getMediaController().startLocalRecording({interval:30000})) {
+				alert("启动视频录制失败！");
+				return;
+			}
+
+			var refreshTimeTask = function() {
+				var duration = cube.getMediaController().getLocalRecorder().getDuration();
+				if (duration > 0) {
+					$('#lab_record_local_time').text(utils.formatDuration(duration));
+				}
+
+				refreshTimer = setTimeout(refreshTimeTask, 1000);
+			};
+
+			refreshTimer = setTimeout(refreshTimeTask, 2000);
+
+			$('#lab_record_local_state').html('<span class="text-danger"><span class="glyphicon glyphicon-play-circle"></span> 正在录制</span>');
+		}
+		else if (confirm('您当前没有视频通话，引擎将进行本地视频的离线录制。\r\n\r\n是否确认启动离线录制？')) {
+			// 进行离线录制
+			if (!cube.getMediaController().startRecording("offline", "local_video", {interval:30000})) {
+				alert("启动离线录制失败！");
+				return;
+			}
+
+			var refreshTimeTask = function() {
+				var duration = cube.getMediaController().getRecorder("offline").getDuration();
+				if (duration > 0) {
+					$('#lab_record_local_time').text(utils.formatDuration(duration));
+				}
+
+				refreshTimer = setTimeout(refreshTimeTask, 1000);
+			};
+
+			refreshTimer = setTimeout(refreshTimeTask, 2000);
+
+			$('#lab_record_local_state').html('<span class="text-danger"><span class="glyphicon glyphicon-play-circle"></span> 正在录制</span>');
+		}
+		else {
+			$(this).removeAttr('disabled');
+			$('#btn_stop_record_local').attr('disabled', 'disabled');
+			$('#btn_replay_local').attr('disabled', 'disabled');
+		}
+	});
+
+	// 停止录像
+	$('#btn_stop_record_local').click(function(e) {
+		$(this).attr('disabled', 'disabled');
+		$('#btn_start_record_local').removeAttr('disabled');
+		$('#btn_replay_local').removeAttr('disabled');
+
+		var taskCallback = function(recorder) {
+			clearTimeout(refreshTimer);
+			refreshTimer = 0;
+
+			// 记录结束
+			fireRecordEnd(recorder);
+		};
+
+		if (cube.getMediaController().hasLocalRecorded()) {
+			cube.getMediaController().stopLocalRecording(taskCallback);
+		}
+		else {
+			cube.getMediaController().stopRecording("offline", taskCallback);
+		}
+	});
+
+	// 回放录制
+	$('#btn_replay_local').click(function(e) {
+		var recorder = null;
+		if (cube.getMediaController().replayLocalRecording("replay_video", "replay_audio")) {
+			recorder = cube.getMediaController().getLocalRecorder();
+		}
+		else if (cube.getMediaController().replayRecording("offline", "replay_video", "replay_audio")) {
+			recorder = cube.getMediaController().getRecorder("offline");
+		}
+
+		if (null != recorder) {
+			$('#replay_info').text('录像时长：' + utils.formatDuration(recorder.getDuration()) + '，数据大小：' + bytesToSize(recorder.getSize()));
+			$('#modal_replay').modal('show');
+		}
+	});
+
+	// 查看录像归档记录
+	$('#btn_history_archive').click(function(e) {
+		// 检查用户是否注册
+		var regState = cube.getSession().getRegState();
+		if (regState != CubeRegistrationState.Ok) {
+			showAlert('<div class="alert alert-warning" role="alert">请先登录系统，再执行此操作！</div>');
+			return;
+		}
+
+		showAlert('<div class="alert alert-primary" role="alert">正在查询记录……</div>');
+
+		// 查询归档的记录
+		cube.mc().queryRecordArchives(cube.getSession().getName(), function(name, data) {
+			// 隐藏
+			hideAlert();
+
+			if (data.size > 0) {
+				var el = $('#archive_table tbody');
+				el.html('');
+				for (var i = 0; i < data.size; ++i) {
+					var a = data.list[i];
+					var time = new Date(a.timestamp);
+					var html = ['<tr><td>', (i+1), '</td>',
+						'<td>', '<a href="javascript:replayArchive(\'', a.name, '\',\'', a.file,'\');" title="点击回放视频">', a.file, '</a>', '</td>',
+						'<td>', (time.getMonth() + 1), '月', time.getDate(), '日 ',
+							time.getHours(), '时', time.getMinutes(), '分', time.getSeconds(), '秒', '</td>',
+						'<td>', a.duration, ' 秒', '</td>',
+						'<td>', bytesToSize(a.size), '</td>',
+						'</tr>'];
+					el.append(html.join(''));
+					html = null;
+				}
+			}
+			else {
+				$('#archive_table tbody').html('<tr><td colspan="5" width="100" align="center">没有归档文档</td></tr>');
+			}
+
+			$('#modal_archive').modal("show");
+		}, function(error) {
+			// 查询发生错误
+
+			// 隐藏
+			hideAlert();
+			alert("查询记录出错。");
+		}, true);
+	});
+
+	// 录像文件归档到云端
+	$('#btn_upload_local').click(function(e) {
+		var $btn = $(this).button("loading");
+
+		var recorder = null;
+		if (cube.getMediaController().hasLocalRecorded()) {
+			recorder = cube.getMediaController().getLocalRecorder();
+		}
+		else {
+			recorder = cube.getMediaController().getRecorder("offline");
+		}
+
+		if (null != recorder) {
+			// 使用 uploadRecordings 指定 URL 进行存档
+			// 参数说明：
+			// url - 指定 POST 提交的 URL 。
+			// param - 指定 JSON 格式的参数，服务器读取 Form 的 "param" 进行解析。
+			// success - 指定存储成功的回调函数。
+			// error - 指定发生错误的回调函数。
+			var ret = recorder.uploadRecordings("archive/save", { "account": "10000" }, function(e) {
+				showAlert('<div class="alert alert-success" role="alert">影像文件已提交到云端，服务器正在归档压缩，请稍候查看。</div>');
+				$btn.button("reset");
+			}, function(e) {
+				showAlert('<div class="alert alert-danger" role="alert">存储影像文件失败。</div>');
+				$btn.button("reset");
+			});
+
+			if (!ret) {
+				showAlert('<div class="alert alert-danger" role="alert">您没有登录，不能进行文件归档。</div>');
+				$btn.button("reset");
+			}
+		}
+	});
+
+	// 显示消息历史对话框
+	$('#btn_history').click(function(e) {
+		// 检查用户使用已经登录
+		var regState = window.cube.getSession().getRegState();
+		if (regState != CubeRegistrationState.Ok) {
+			showAlert('<div class="alert alert-warning" role="alert">请先登录系统，再执行此操作！</div>');
+			return;
+		}
+
+		$('#history_content').html('');
+
+		$('#modal_history').modal('show');
+	});
+
+	// 查询最近一天的消息记录
+	$('#btn_oneday_history').click(function(e) {
+		// 计算查询起止事件
+		var end = Date.now();
+		var begin = end - 24 * 60 * 60 * 1000;
+
+		// 清空内容区
+		$('#history_content').html('');
+
+		// 查询消息历史记录
+		window.cube.queryMessageHistory(begin, end, function(messages) {
+			// 从返回的数组里获取消息
+			for (var i = 0; i < messages.length; ++i) {
+				var message = messages[i];
+				if (message.type == 'text') {
+					window.appendHistory(message);
+				}
+			}
+		});
+	});
+
+	// 查询最近一小时的消息记录
+	$('#btn_onehour_history').click(function() {
+		// 计算查询起止事件
+		var end = Date.now();
+		var begin = end - 60 * 60 * 1000;
+
+		// 清空内容区
+		$('#history_content').html('');
+
+		// 查询消息历史记录
+		window.cube.queryMessageHistory(begin, end, function(messages) {
+			// 从返回的数组里获取消息
+			for (var i = 0; i < messages.length; ++i) {
+				var message = messages[i];
+				if (message.type == 'text') {
+					window.appendHistory(message);
+				}
+			}
+		});
+	});
+
+	// 发送消息按钮事件
+	$('#btn_send_msg').click(function(e) {
+		sendMessage();
+	});
+
+	// 使用回车键快速发送消息
+	$('#input_text').keypress(function(e) {
+		if (e.keyCode == 13) {
+			sendMessage();
+			e.preventDefault();
+		}
+	});
+
+	// 分享白板事件
+	$('#btn_wb_action_share').click(function(e) {
+		var name = $('#input_peername').val();
+		if (name.length < 4) {
+			showAlert('请输入正确的用户名');
+			return;
+		}
+
+		var wb = window.cube.getWhiteboard();
+		// 将白板分享给指定的用户
+		if (wb.isSharing()) {
+			// 停止分享
+			wb.revokeSharing();
+			$('#btn_wb_action_share').text("分享");
+		}
+		else {
+			wb.shareWith([name]);
+			$('#btn_wb_action_share').text("停止");
+		}
+	});
+
+	// 白板功能实体按钮事件控制
+	var wbTools = [$('#btn_wb_action_pencil'), $('#btn_wb_action_text'), $('#btn_wb_action_rect'), $('#btn_wb_action_ellipse')];
+	var switchTool = function(active) {
+		for (var i = 0; i < wbTools.length; ++i) {
+			var btn = wbTools[i];
+			if (btn == active) {
+				continue;
+			}
+
+			btn.removeClass('active');
+		}
+	}
+
+	// 白板文件工具，分享文件
+	$('#btn_wb_action_sharing').click(function(e) {
+		if (!cube.getSession().hasRegistered()) {
+			showAlert('<div class="alert alert-warning" role="alert">请先登录系统，再执行此操作！</div>');
+			return;
+		}
+
+		// 设置非阅读模式
+		cube.getWhiteboard().setReadMode(false);
+
+		$('#modal_sharing').modal('show');
+	});
+
+	// 白板文件工具，阅读
+	$('#btn_wb_action_read').click(function(e) {
+		if (!cube.getSession().hasRegistered()) {
+			showAlert('<div class="alert alert-warning" role="alert">请先登录系统，再执行此操作！</div>');
+			return;
+		}
+
+		// 设置阅读模式
+		cube.getWhiteboard().setReadMode(true);
+
+		$('#modal_sharing').modal('show');
+	});
+
+	// 白板铅笔工具
+	$('#btn_wb_action_pencil').click(function(e) {
+		var checked = !$(this).hasClass('active');
+		if (checked) {
+			var pencil = new PencilEntity();
+			cube.getWhiteboard().selectEntity(pencil);
+			switchTool($(this));
+		}
+		else {
+			window.cube.getWhiteboard().unselect();
+		}
+	});
+
+	// 白板文本工具
+	$('#btn_wb_action_text').click(function(e) {
+		var checked = !$(this).hasClass('active');
+		if (checked) {
+			var text = new TextEntity();
+			window.cube.getWhiteboard().selectEntity(text);
+			switchTool($(this));
+		}
+		else {
+			window.cube.getWhiteboard().unselect();
+		}
+	});
+
+	// 白板方框工具
+	$('#btn_wb_action_rect').click(function(e) {
+		var checked = !$(this).hasClass('active');
+		if (checked) {
+			var rect = new RectEntity();
+			window.cube.getWhiteboard().selectEntity(rect);
+			switchTool($(this));
+		}
+		else {
+			window.cube.getWhiteboard().unselect();
+		}
+	});
+
+	// 白板圆圈工具
+	$('#btn_wb_action_ellipse').click(function(e) {
+		var checked = !$(this).hasClass('active');
+		if (checked) {
+			var ellipse = new EllipseEntity();
+			window.cube.getWhiteboard().selectEntity(ellipse);
+			switchTool($(this));
+		}
+		else {
+			window.cube.getWhiteboard().unselect();
+		}
+	});
+
+	// 白板撤销
+	$('#btn_wb_action_undo').click(function(e) {
+		window.cube.getWhiteboard().undo();
+	});
+
+	// 白板重做
+	$('#btn_wb_action_redo').click(function(e) {
+		window.cube.getWhiteboard().redo();
+	});
+
+	// 白板擦除笔记
+	$('#btn_wb_action_erase').click(function(e) {
+		window.cube.getWhiteboard().erase();
+	});
+
+	// 白板清空
+	$('#btn_wb_action_clean').click(function(e) {
+		window.cube.getWhiteboard().cleanup();
+	});
+
+	// 窗口大小变更事件
+	$(window).resize(function(e) {
+		// 白板大小自动校正
+		var wb = window.cube.getWhiteboard();
+		if (null != wb) {
+			wb.adjustSize();
+		}
+	});
+
+	var host = "211.103.217.154";
+	// 带宽快速测试
+	$('#btn_fast_test').click(function(e) {
+		showAlert('正在进行快速带宽测试，请稍候……');
+
+		var bw = 0;
+
+		window.utils.measureBandwidth(true, function(bwbps, bwKbps, bwMbps) {
+			bw = bwKbps;
+			window.utils.measureBandwidth(true, function(bwbps, bwKbps, bwMbps) {
+				bw = ((new Number(bw) + new Number(bwKbps)) * 0.5);
+				if (bw > 1024) {
+					bw = (bw / 1024).toFixed(2);
+					$('#lab_bandwidth').text(bw + ' Mbits/s');
+				}
+				else {
+					$('#lab_bandwidth').text(bw + ' Kbits/s');
+				}
+				hideAlert();
+			}, function() {
+				showAlert('测试发生错误，请检查网络连接。');
+			}, host);
+		}, function() {
+			showAlert('测试发生错误，请检查网络连接。');
+		}, host);
+	});
+
+	// 带宽标准测试
+	$('#btn_normal_test').click(function(e) {
+		showAlert('正在进行标准带宽测试，请稍候……');
+
+		window.utils.measureBandwidth(false, function(bwbps, bwKbps, bwMbps) {
+			if (bwKbps > 1024) {
+				$('#lab_bandwidth').text(bwMbps + ' Mbits/s');
+			}
+			else {
+				$('#lab_bandwidth').text(bwKbps + ' Kbits/s');
+			}
+			hideAlert();
+		}, function() {
+			showAlert('测试发生错误，请检查网络连接。');
+		}, host);
+	});
+
+	// 单节点选项测试
+	$('#cb_singlenode').change(function(e) {
+		var checked = $(this)[0].checked;
+		// 非公开的调试接口
+		window.cube._debug({single: checked});
+	});
+
+	// 会议列表
+	$('#btn_conf_list').click(function(e) {
+		window.cube.getConferenceUA().listConferences(function(data) {
+			if (data.size == 0) {
+				showAlert("<p>没有查找到正在进行的会议。</p>");
+				return;
+			}
+
+			var html = [];
+			for (var i = 0; i < data.list.length; ++i) {
+				html.push("<tr>");
+				var conf = data.list[i];
+				html.push("<td>", conf.id, "</td>");
+				html.push("<td>", conf.runTime, " 秒</td>");
+				html.push("<td>", conf.members.length, "</td>");
+				html.push("<td>", conf.rate, "</td>");
+				html.push("</tr>");
+			}
+			$('#conflist_table tbody').html(html.join(''));
+			$('#modal_conferencelist').modal('show');
+			html = null;
+		});
+	});
+
+	// 会议控制面板
+	$('#btn_conf_controller').click(function(e) {
+		var callee = "";
+		try {
+			callee = cube.getSession().getCallPeer().getName();
+		} catch (e) {
+			// Nothing
+		}
+
+		if (callee.length != 4) {
+			return;
+		}
+
+		setTimeout(function() {
+			window.loadConference(callee);
+		}, 100);
+
+		$('#modal_conference').modal('show');
+	});
+
+	// 启动定时器，定时更新实时数据
+	setInterval(function() {
+		var latency = window.cube.getSession().getLatency();
+		if (latency > 0) {
+			$('#lab_latency').text(latency + ' ms');
+			var color = '#5cb85c';
+			if (latency > 100 && latency < 200) {
+				color = '#f0ad4e';
+			}
+			else if (latency >= 200) {
+				color = '#d9534f';
+			}
+
+			$('#lab_latency_icon')[0].style.color = color;
+		}
+	}, 5000);
+});
+
+(function(global) {
+	// 会议实例
+	global.conference = null;
+
+	// 显示 Alert 信息
+	global.showAlert = function(content) {
+		$('#alert_content').html(content);
+		$('#modal_alert').modal('show');
+	};
+
+	// 隐藏 Alert 信息
+	global.hideAlert = function() {
+		$('#modal_alert').modal('hide');
+	};
+
+	// 设置注册信息
+	global.setRegInfo = function(content) {
+		$('#reg_info').text(content);
+	};
+
+	// 设置呼叫信息
+	global.setCallInfo = function(content) {
+		$('#call_info').text(content);
+	};
+
+	// 设置白板信息
+	global.setWhiteboardInfo = function(content) {
+		$('#wb_info').text(content);
+	};
+
+	// 处理记录结束
+	global.fireRecordEnd = function(recorder) {
+		console.log("记录段数：" + recorder.numRecordings());
+
+		$('#lab_record_local_time').text(utils.formatDuration(recorder.getDuration()));
+		$('#lab_record_local_size').text(bytesToSize(recorder.getSize()));
+
+		$('#lab_record_local_state').html('<span class="text-info"><span class="glyphicon glyphicon-record"></span> 准备就绪</span>');
+
+		$('#btn_start_record_local').removeAttr('disabled');
+		$('#btn_replay_local').removeAttr('disabled');
+		$('#btn_upload_local').removeAttr('disabled');
+		$('#btn_stop_record_local').attr('disabled', 'disabled');
+	};
+
+	// 回放存档
+	global.replayArchive = function(name, file) {
+		hideAlert();
+
+		// 加载存档
+		cube.mc().loadArchive(name, file, "replay_video", true);
+
+		// 显示界面
+		$('#replay_info').text('录像文件：' + file);
+		$('#modal_replay').modal('show');
+	};
+
+	// 追加文本信息
+	// type:
+	// 0 - 系统消息
+	// 1 - 对方消息
+	// 2 - 己方消息
+	global.appendText = function(type, content) {
+		switch (type) {
+			case 0:
+				$('#text_area').append('<p class="text-center text-system">'+ content +'</p>');
+				break;
+			case 1:
+				$('#text_area').append('<p class="text-left">'+ content +'</p>');
+				break;
+			case 2:
+				$('#text_area').append('<p class="text-right text-self">'+ content +'</p>');
+				break;
+			default:
+				break;
+		}
+
+		$('#text_area').scrollTop(20000);
+	};
+
+	// 格式化时间戳
+	global.formatTimestamp = function(time) {
+		var date = new Date(time);
+		var str = [date.getMonth() + 1, '/', date.getDate(), ' ',
+			date.getHours() < 10 ? '0' + date.getHours() : date.getHours(), ':',
+			date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes(), ':',
+			date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()];
+		return str.join('');
+	};
+
+	// 追加历史消息记录
+	global.appendHistory = function(message) {
+		var c = $('#history_content');
+		var html = ['<p>', global.formatTimestamp(message.getSendTime()), ' ',
+			message.getSender().displayName, ' -&gt; ', message.getReceiver().displayName, ' : ', message.getContent(), '</p>'];
+		c.append(html.join(''));
+	};
+
+	// 加载会议数据
+	global.loadConference = function(id) {
+		cube.cua().getConference(id, function(data) {
+			global.conference = data;
+
+			$('#cc_name').text(data.id);
+			$("[name='switch-checkbox']").off('switchChange.bootstrapSwitch');
+
+/*
+			<tr class="400">
+				<td>400</td>
+				<td>My Name</td>
+				<td>11430</td>
+				<td>
+					<input class="floor" type="checkbox" name="switch-checkbox" data-id="400" data-size="mini" data-label-text="Floor" checked>
+					<input class="deaf" type="checkbox" name="switch-checkbox" data-size="mini" data-label-text="Deaf">
+					<input class="mute" type="checkbox" name="switch-checkbox" data-size="mini" data-label-text="Mute">
+				</td>
+			</tr>
+*/
+			var html = [];
+
+			for (var i = 0; i < data.members.length; ++i) {
+				var member = data.members[i];
+				html.push('<tr><td>', member.id, '</td>');
+				html.push('<td>', member.displayName, '</td>');
+				html.push('<td>', member.caller, '</td>');
+				html.push('<td>');
+				html.push('<input type="checkbox" name="switch-checkbox" data-action="floor" data-caller="', member.caller, '" data-size="mini" data-label-text="Floor" ', member.flag.hasFloor ? 'checked disabled' : '', '>&nbsp;');
+				html.push('<input type="checkbox" name="switch-checkbox" data-action="deaf" data-caller="', member.caller, '" data-size="mini" data-label-text="Deaf" ', member.flag.canHear ? '' : 'checked', '>&nbsp;');
+				html.push('<input type="checkbox" name="switch-checkbox" data-action="mute" data-caller="', member.caller, '" data-size="mini" data-label-text="Mute" ', member.flag.canSpeak ? '' : 'checked', '>&nbsp;');
+				html.push('</td></tr>');
+			}
+
+			$('#cc_member_table tbody').html(html.join(''));
+			html = null;
+
+			$("[name='switch-checkbox']").bootstrapSwitch();
+
+			var lock = false;
+			$("[name='switch-checkbox']").on('switchChange.bootstrapSwitch', function(event, state) {
+				if (lock) {
+					return;
+				}
+
+				var self = $(this);
+				var caller = self.attr("data-caller");
+				var action = self.attr("data-action");
+
+				if (action == "floor") {
+					cube.cua().changeFloor(global.conference.id, caller, function() {
+						lock = true;
+						$("[data-action='floor']").bootstrapSwitch('toggleDisabled', false);
+						$("[data-action='floor']").bootstrapSwitch('toggleState', false);
+
+						setTimeout(function() {
+							self.attr("disabled", "disabled");
+							lock = false;
+						}, 500);
+					});
+				}
+				else if (action == "deaf") {
+					cube.cua().setMemberDeaf(global.conference.id, caller, state, function() {
+						Logger.i("CubeDemo", "Set member '" + caller +"' deaf: " + state);
+					});
+				}
+				else if (action == "mute") {
+					cube.cua().setMemberMute(global.conference.id, caller, state, function() {
+						Logger.i("CubeDemo", "Set member '" + caller +"' mute: " + state);
+					});
+				}
+			});
+		});
+	};
+
+	/*
+	 * 实现注册监听器。
+	 */
+	global.SimpleRegistrationListener = Class(CubeRegistrationListener, {
+		ctor: function() {
+			// Nothing
+		},
+
+		onRegistrationProgress: function(session) {
+			setRegInfo('正在注册……');
+		},
+
+		onRegistrationOk: function(session) {
+			$('#input_myname').attr('disabled', 'disabled');
+			$('#input_mydisplayname').attr('disabled', 'disabled');
+			$('#btn_register').attr('disabled', 'disabled');
+			$('#btn_unregister').removeAttr('disabled');
+
+			$('#btn_call').removeAttr('disabled');
+
+			$('#btn_wb_action_share').removeAttr('disabled');
+			$('#btn_wb_action_master').removeAttr('disabled');
+			$('#btn_wb_action_save').removeAttr('disabled');
+
+			setRegInfo('在线');
+		},
+
+		onRegistrationCleared: function(session) {
+			$('#input_myname').removeAttr('disabled');
+			$('#input_mydisplayname').removeAttr('disabled');
+
+			$('#btn_unregister').attr('disabled', 'disabled');
+			$('#btn_register').removeAttr('disabled');
+
+			$('#btn_call').attr('disabled', 'disabled');
+			$('#btn_answer').attr('disabled', 'disabled');
+			$('#btn_terminate').attr('disabled', 'disabled');
+
+			$('#btn_wb_action_share').attr('disabled', 'disabled');
+			$('#btn_wb_action_share').text("分享");
+			$('#btn_wb_action_master').attr('disabled', 'disabled');
+			$('#btn_wb_action_save').attr('disabled', 'disabled');
+
+			setRegInfo('离线');
+
+			global.conference = null;
+		},
+
+		onRegistrationFailed: function(session) {
+			setRegInfo('注册失败');
+
+			global.conference = null;
+		}
+	});
+
+	/*
+	 * 实现音视频通话监听器。
+	 */
+	global.SimpleCallListener = Class(CubeCallListener, {
+		ctor: function() {
+			// Nothing
+		},
+
+		onNewCall: function(direction, session, video) {
+			// 处理 UI
+			$('.video-window').show();
+			if (!$('#btn_toggle_video').hasClass('active')) {
+				$('#btn_toggle_video').addClass('active');
+			}
+
+			setCallInfo(direction == CubeCallDirection.Outgoing ? "正在接线……" : "来电，请接听！");
+
+			// 查询呼叫用户的信息
+			window.cube.queryAccounts([session.callPeer.getName()], function(list) {
+				var name = list[0].name;
+				var state = list[0].state;
+				if (state == 1) {
+					// 用户的数据
+					var data = list[0].data;
+					setCallInfo(direction == CubeCallDirection.Outgoing ?
+						"呼叫 '" + data.displayName + "'" : "'" + data.displayName + "' 来电");
+				}
+			});
+
+			$('#btn_call').attr('disabled', 'disabled');
+			$('#btn_terminate').removeAttr('disabled');
+
+			if (direction == CubeCallDirection.Incoming) {
+				$('#btn_answer').removeAttr('disabled');
+			}
+			else {
+				$('#btn_answer').attr('disabled', 'disabled');
+			}
+		},
+
+		onInProgress: function(session) {
+			setCallInfo('正在接通……');
+		},
+
+		onCallRinging: function(session) {
+			setCallInfo("'" + session.callPeer.getDisplayName() + "' 正在振铃");
+		},
+
+		onCallConnected: function(session) {
+			setCallInfo("正在与 '" + session.callPeer.getDisplayName() + "' 通话");
+
+			$('#input_peername').val(session.callPeer.getName());
+
+			$('#btn_answer').attr('disabled', 'disabled');
+
+			// 本地视频控制按钮
+			$('#btn_localvideo').show();
+			$('#btn_localvoice').show();
+
+			// 同步音量数据到UI
+			$('#input_volume').slider('setValue', window.cube.getMediaController().getVolume());
+
+			// 接通通话就开始分享白板
+			window.cube.getWhiteboard().shareWith([session.callPeer.getName()]);
+			$('#btn_wb_action_share').text("停止");
+		},
+
+		onCallEnded: function(session) {
+			setCallInfo('通话结束');
+
+			$('#btn_call').removeAttr('disabled');
+			$('#btn_answer').attr('disabled', 'disabled');
+			$('#btn_terminate').attr('disabled', 'disabled');
+			$('#local_video_info').text('');
+			$('#remote_video_info').text('');
+
+			// 本地媒体控制按钮
+			$('#btn_localvideo').text("关闭视频");
+			$('#btn_localvideo').hide();
+			$('#btn_localvoice').text("关闭话筒");
+			$('#btn_localvoice').hide();
+
+			// 通话结束系统自动关闭录制
+			$('#lab_record_local_state').html('<span class="text-info"><span class="glyphicon glyphicon-record"></span> 准备就绪</span>');
+			if (cube.getMediaController().hasLocalRecorded()) {
+				setTimeout(function() { fireRecordEnd(cube.getMediaController().getLocalRecorder()); }, 1000);
+			}
+
+			global.conference = null;
+		},
+
+		onCallFailed: function(session, errorCode) {
+			setCallInfo('发生错误: ' + errorCode);
+
+			// 常见错误处理
+			if (errorCode == CubeCallErrorCode.ICEConnectionFailed) {
+				showAlert('通话连接失败，请稍候再试');
+			}
+			else if (errorCode == CubeCallErrorCode.BusyEverywhere) {
+				showAlert('对方占线，请稍候再试');
+			}
+			else if (errorCode == CubeCallErrorCode.RequestTimeout) {
+				showAlert('对方不在线，请稍候再试');
+			}
+
+			global.conference = null;
+		}
+	});
+
+	/**
+	 * 媒体探针。
+	 */
+	global.SimpleMediaProbe = Class(CubeMediaProbe, {
+		animated: false,
+
+		ctor: function() {
+			// Nothing
+		},
+
+		onLocalVideoReady: function(mediaController) {
+			$('#local_video_info').text('(就绪)');
+		},
+
+		onRemoteVideoReady: function(mediaController) {
+			$('#remote_video_info').text('(就绪)');
+		},
+
+		onLocalVideoFPS: function(mediaController, videoWidth, videoHeight, curFPS, avgFPS) {
+			$('#local_video_info').text('(' + videoWidth + 'x' + videoHeight + ' @ ' + curFPS + '/' + avgFPS + ')');
+		},
+
+		onRemoteVideoFPS: function(mediaController, videoWidth, videoHeight, curFPS, avgFPS) {
+			$('#remote_video_info').text('(' + videoWidth + 'x' + videoHeight + ' @ ' + curFPS + '/' + avgFPS + ')');
+		},
+
+		onFrameRateWarning: function(mediaController, curFps, avgFps, maxFps) {
+			Logger.w("SimpleMediaProbe", "Frame rate warning");
+			// 引擎发出帧率警告
+			this.animated = true;
+			$('#video_warning').show();
+
+			this._loopWarningAnimating();
+		},
+
+		onFrameRateRecovering: function(mediaController, curFps, avgFps, maxFps) {
+			Logger.w("SimpleMediaProbe", "Frame rate recovering");
+
+			this._stopWarningAnimating();
+		},
+
+		_loopWarningAnimating: function() {
+			if (!this.animated) {
+				return;
+			}
+
+			var self = this;
+			$('#video_warning').animate({opacity: 1}, 1000, function() {
+				$('#video_warning').animate({opacity: 0.2}, 800, function() {
+					self._loopWarningAnimating();
+				});
+			});
+		},
+
+		_stopWarningAnimating: function() {
+			this.animated = false;
+			$('#video_warning').hide();
+		}
+	});
+
+	/*
+	 * 实现消息监听器。
+	 */
+	global.SimpleMessageListener = Class(CubeMessageListener, {
+		ctor: function() {
+			// Nothing
+		},
+
+		onSent: function(session, message) {
+			global.appendText(2, session.getDisplayName() + "：" + message.getContent());
+		},
+
+		onReceived: function(session, message) {
+			global.appendText(1, message.getSender().displayName + "：" + message.getContent());
+
+			if ($('#input_peername').val().length < 4) {
+				$('#input_peername').val(message.getSender().name);
+			}
+		},
+
+		onMessageFailed: function(session, errorCode, message) {
+			global.appendText(0, "出错: " + errorCode);
+		}
+	});
+
+	/**
+	 * 实现白板监听器。
+	 */
+	global.SimpleWhiteboardListener = Class(CubeWhiteboardListener, {
+		ctor: function() {
+			// Nothing
+		},
+
+		onShared: function(whiteboard, sharedList) {
+			var info = "(与 '" + sharedList[0] + "' 共享白板)";
+			setWhiteboardInfo(info);
+		},
+
+		onFileShared: function(whiteboard, file) {
+			// 隐藏对话框
+			$('#modal_sharing').modal('hide');
+		},
+
+		onSlide: function(whiteboard, slide) {
+			var text = ["幻灯片文件：", slide.getDocName(), " ，共 ", slide.numPages(), " 页，当前第 ", slide.currentPage(), " 页。点击图片或使用方向键翻页。"];
+			$('#wb_state_bar').html(text.join(''));
+		},
+
+		onFailed: function(whiteboard, errorCode) {
+		}
+	});
+})(window);
+</script>
+</body>
+</html>
